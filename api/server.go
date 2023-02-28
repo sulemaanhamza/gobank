@@ -1,7 +1,10 @@
 package api
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 	db "github.com/sulemaanhamza/gobank/db/sqlc"
 )
 
@@ -14,6 +17,13 @@ type Server struct {
 func NewServer(store db.Store) *Server {
 	server := &Server{store: store}
 	router := gin.Default()
+
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		err := v.RegisterValidation("currency", validCurrency)
+		if err != nil {
+			fmt.Println("Unable to register currency validator", err)
+		}
+	}
 
 	router.GET("/accounts", server.listAccounts)
 	router.GET("/accounts/:id", server.getAccount)
