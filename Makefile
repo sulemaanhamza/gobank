@@ -1,3 +1,6 @@
+network:
+	docker network create gobank-network
+
 postgres:
 	docker run --name postgres12 --network gobank-network -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=secret -d postgres:12-alpine
 
